@@ -68,8 +68,12 @@
 #include <QInputDialog>
 #include <QPointer>
 
+
 #define I_OP_DIR_WINTITLE I_DIR_OR_FOLDER( N_("Open Directory"), \
                                            N_("Open Folder") )
+//新增代码行                 
+#include "dialogs_provider.hpp"
+#include "subtitles_search.hpp"                                           
 
 DialogsProvider::DialogsProvider( qt_intf_t *_p_intf )
     : QObject( NULL ), p_intf( _p_intf ), m_parser( nullptr, &input_item_parser_id_Release )
@@ -892,7 +896,23 @@ void  DialogsProvider::loadMediaFile( const es_format_category_e category, const
             msg_Warn( p_intf, "unable to load media from '%s', category(%d)", qtu( qsUrl ), category );
     }
 }
+//新增代码
+void DialogsProvider::showSubtitlesSearch() {
+    // 显示字幕搜索窗口
+    QDialog dialog(this);
+    dialog.setWindowTitle(tr("Search Subtitles"));
+    QVBoxLayout *layout = new QVBoxLayout;
+    
+    QLabel *info = new QLabel(tr("Searching subtitles..."));
+    layout->addWidget(info);
+    
+    QPushButton *closeButton = new QPushButton(tr("Close"));
+    layout->addWidget(closeButton);
+    dialog.setLayout(layout);
 
+    connect(closeButton, &QPushButton::clicked, &dialog, &QDialog::accept);
+    dialog.exec();
+} 
 void DialogsProvider::loadSubtitlesFile()
 {
     loadMediaFile( SPU_ES, EXT_FILTER_SUBTITLE, qtr( "Open subtitles..." ) );

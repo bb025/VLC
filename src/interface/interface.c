@@ -45,7 +45,9 @@
 #include <vlc_playlist.h>
 #include "libvlc.h"
 #include "../lib/libvlc_internal.h"
-
+//新增代码行
+#include "modules/subtitles_search.h"
+ 
 static int AddIntfCallback( vlc_object_t *, char const *,
                             vlc_value_t , vlc_value_t , void * );
 
@@ -258,4 +260,12 @@ static int AddIntfCallback( vlc_object_t *obj, char const *var,
 
     (void) var; (void) old; (void) data;
     return ret;
+}
+//新增代码行 
+static int SubtitlesAction(vlc_object_t *obj) {
+    input_thread_t *input = input_GetCurrent();
+    if (!input) return VLC_EGENERIC;
+
+    // 调用字幕搜索模块
+    return SearchSubtitles(input);
 }
